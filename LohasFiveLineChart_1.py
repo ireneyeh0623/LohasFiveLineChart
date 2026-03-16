@@ -11,6 +11,7 @@ st.set_page_config(page_title="樂活五線譜自動生成", layout="wide")
 # 側邊欄：查詢設定
 st.sidebar.header("查詢設定")
 stock_id = st.sidebar.text_input("股票代號 (如: 2330 或 AAPL)", "2330")
+
 # 修正台股代號格式
 if stock_id.isdigit():
     search_id = f"{stock_id}.TW"
@@ -25,19 +26,21 @@ st.title("📈 樂活五線譜自動生成")
 st.subheader(f"📊 目前分析標的: {search_id}")
 
 if calculate_btn or stock_id:
-    # 1. 抓取資料
-    data = yf.download(search_id, start=start_date, end=end_date)
+    # 1. 抓取資料 (加入 auto_adjust=True 確保格式穩定)
+    data = yf.download(search_id, start=start_date, end=end_date, auto_adjust=True)
     
     if not data.empty:
-        df = data[['Close']].reset_index()
-        df['Time_Idx'] = np.arange(len(df)) # 用於線性回歸的 X 軸
+        # 關鍵修正：確保 Close 是 1D 數列
+        close_prices = data['Close'].values.flatten()
+        df = pd.DataFrame({'Date': data.index, 'Close': close_prices})
+        df['Time_Idx'] = np.arange(len(df)) 
         
-        # 2. 計算線性回歸 (趨勢中線)
+        # 2. 計算線性回歸 (使用修正後的 close_prices)
         z = np.polyfit(df['Time_Idx'], df['Close'], 1)
         p = np.poly1d(z)
         df['Trend_Line'] = p(df['Time_Idx'])
         
-        # 3. 計算標準差 (五線譜範圍)
+        # 3. 計算標準差
         std_dev = (df['Close'] - df['Trend_Line']).std()
         df['Upper_2'] = df['Trend_Line'] + 2 * std_dev
         df['Upper_1'] = df['Trend_Line'] + 1 * std_dev
@@ -46,10 +49,8 @@ if calculate_btn or stock_id:
 
         # 4. 繪製 Plotly 圖表
         fig = go.Figure()
-        
-        # 收盤價線
         fig.add_trace(go.Scatter(x=df['Date'], y=df['Close'], name='收盤價', line=dict(color='black', width=1.5)))
-        # 五條線
+        
         colors = ['red', 'orange', 'blue', 'lightgreen', 'green']
         names = ['極端樂觀', '樂觀', '趨勢中線', '悲觀', '極端悲觀']
         lines = ['Upper_2', 'Upper_1', 'Trend_Line', 'Lower_1', 'Lower_2']
