@@ -90,7 +90,7 @@ search_id = f"{stock_id}.TW" if stock_id.isdigit() else stock_id
 st.title("📈 樂活五線譜自動生成")
 
 # --- 3. 判斷邏輯：如果按鈕「還沒被按下」 ---
-if calculate_btn or stock_id:
+if calculate_btn:
     st.info("💡 請點開左上角選單 [ > ] 設定參數後按「開始計算」。")
 else:
     # --- 4. 按下按鈕後才執行的動作：抓取資料 ---
