@@ -35,20 +35,27 @@ else:
     font_color = "black"
     bg_color = "#FFFFFF"
     st.markdown("""
+        /* 強制按鈕內部的所有文字元素（p, span, div）全部變白 */
+        div.stButton > button * {
+            color: #FFFFFF !important;}
         <style>
         /* 強制側邊欄、主背景、文字顏色為純白 */
         [data-testid="stSidebar"], .stApp, header { background-color: #FFFFFF !important; color: black !important; }
         .stMarkdown, p, h1, h2, h3, span { color: black !important; }
         
-        /* 修正開始計算按鈕：強化字體顏色顯示 */
-        div.stButton > button {
+        /* 加強版修正開始計算按鈕：針對所有可能影響顏色的層級進行強制設定 */
+        div.stButton > button, div.stButton > button:active, div.stButton > button:focus {
             background-color: #000000 !important;
-            color: #FFFFFF !important; /* 強制文字為純白色 */
+            color: #FFFFFF !important;
             border: 1px solid #000000 !important;
-            font-weight: bold !important; /* 加粗讓字體更明顯 */
+            font-weight: bold !important;
         }
         
-        /* 當滑鼠移過按鈕時的顏色（可選，增加互動感） */
+        /* 特別針對按鈕內的文字標籤強制改為白色 */
+        div.stButton > button p {
+            color: #FFFFFF !important;
+        }
+        
         div.stButton > button:hover {
             background-color: #333333 !important;
             color: #FFFFFF !important;
