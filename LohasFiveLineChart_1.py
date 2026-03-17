@@ -23,8 +23,11 @@ if theme_choice == "深色(深色背景)":
     bg_color = "#0E1117"
     st.markdown("""
         <style>
+        /* 強制側邊欄、主背景、文字顏色為深色 */
         [data-testid="stSidebar"], .stApp, header { background-color: #0E1117 !important; color: white !important; }
         .stMarkdown, p, h1, h2, h3, span { color: white !important; }
+        /* 調整輸入框文字顏色 */
+        input { color: white !important; background-color: #262730 !important; }
         </style>
         """, unsafe_allow_html=True)
 else:
@@ -33,8 +36,18 @@ else:
     bg_color = "#FFFFFF"
     st.markdown("""
         <style>
+        /* 強制側邊欄、主背景、文字顏色為純白 */
         [data-testid="stSidebar"], .stApp, header { background-color: #FFFFFF !important; color: black !important; }
         .stMarkdown, p, h1, h2, h3, span { color: black !important; }
+        /* 1. 修正開始計算按鈕：背景黑色，字體白色 */
+        div.stButton > button {
+            background-color: #000000 !important;
+            color: #FFFFFF !important;
+            border-radius: 5px;
+        }
+        /* 調整輸入框與按鈕邊框 */
+        [data-testid="stSidebar"] { border-right: 1px solid #f0f2f6; }
+        input { color: black !important; background-color: white !important; border: 1px solid #dcdcdc !important; }
         </style>
         """, unsafe_allow_html=True)
 
@@ -44,7 +57,6 @@ calculate_btn = st.sidebar.button("開始計算")
 search_id = f"{stock_id}.TW" if stock_id.isdigit() else stock_id
 
 st.title("📈 樂活五線譜自動生成")
-st.subheader(f"📊 目前分析標的: {search_id}")
 
 if calculate_btn or stock_id:
     # 抓取資料
