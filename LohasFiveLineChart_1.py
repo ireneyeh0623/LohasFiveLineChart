@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 from datetime import datetime
 
 # 網頁配置
-st.set_page_config(page_title="樂活五線譜自動生成", layout="wide")
+st.set_page_config(page_title="樂活五線譜", layout="wide")
 
 # --- 側邊欄：查詢設定 ---
 st.sidebar.header("查詢設定")
