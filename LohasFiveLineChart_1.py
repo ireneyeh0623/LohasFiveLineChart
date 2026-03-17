@@ -39,12 +39,21 @@ else:
         /* 強制側邊欄、主背景、文字顏色為純白 */
         [data-testid="stSidebar"], .stApp, header { background-color: #FFFFFF !important; color: black !important; }
         .stMarkdown, p, h1, h2, h3, span { color: black !important; }
-        /* 1. 修正開始計算按鈕：背景黑色，字體白色 */
+        
+        /* 修正開始計算按鈕：強化字體顏色顯示 */
         div.stButton > button {
             background-color: #000000 !important;
-            color: #FFFFFF !important;
-            border-radius: 5px;
+            color: #FFFFFF !important; /* 強制文字為純白色 */
+            border: 1px solid #000000 !important;
+            font-weight: bold !important; /* 加粗讓字體更明顯 */
         }
+        
+        /* 當滑鼠移過按鈕時的顏色（可選，增加互動感） */
+        div.stButton > button:hover {
+            background-color: #333333 !important;
+            color: #FFFFFF !important;
+        }
+
         /* 調整輸入框與按鈕邊框 */
         [data-testid="stSidebar"] { border-right: 1px solid #f0f2f6; }
         input { color: black !important; background-color: white !important; border: 1px solid #dcdcdc !important; }
