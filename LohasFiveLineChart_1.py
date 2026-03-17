@@ -35,35 +35,44 @@ else:
     font_color = "black"
     bg_color = "#FFFFFF"
     st.markdown("""
-        /* 強制按鈕內部的所有文字元素（p, span, div）全部變白 */
-        div.stButton > button * {
-            color: #FFFFFF !important;}
         <style>
-        /* 強制側邊欄、主背景、文字顏色為純白 */
-        [data-testid="stSidebar"], .stApp, header { background-color: #FFFFFF !important; color: black !important; }
+        /* 1. 強制背景與文字顏色 */
+        [data-testid="stSidebar"], .stApp, header { 
+            background-color: #FFFFFF !important; 
+            color: black !important; 
+        }
         .stMarkdown, p, h1, h2, h3, span { color: black !important; }
         
-        /* 加強版修正開始計算按鈕：針對所有可能影響顏色的層級進行強制設定 */
-        div.stButton > button, div.stButton > button:active, div.stButton > button:focus {
+        /* 2. 修正日期輸入框右側的黑色區塊 */
+        div[data-baseweb="input"] {
+            background-color: white !important;
+        }
+        div[data-baseweb="input"] > div {
+            background-color: white !important;
+            color: black !important;
+        }
+
+        /* 3. 強制按鈕內部的所有文字元素變白 */
+        div.stButton > button {
             background-color: #000000 !important;
-            color: #FFFFFF !important;
             border: 1px solid #000000 !important;
             font-weight: bold !important;
         }
-        
-        /* 特別針對按鈕內的文字標籤強制改為白色 */
-        div.stButton > button p {
+        div.stButton > button * {
             color: #FFFFFF !important;
         }
         
         div.stButton > button:hover {
             background-color: #333333 !important;
-            color: #FFFFFF !important;
         }
 
-        /* 調整輸入框與按鈕邊框 */
+        /* 4. 側邊欄邊框調整 */
         [data-testid="stSidebar"] { border-right: 1px solid #f0f2f6; }
-        input { color: black !important; background-color: white !important; border: 1px solid #dcdcdc !important; }
+        input { 
+            color: black !important; 
+            background-color: white !important; 
+            border: 1px solid #dcdcdc !important; 
+        }
         </style>
         """, unsafe_allow_html=True)
 
