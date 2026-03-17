@@ -87,7 +87,7 @@ calculate_btn = st.sidebar.button("開始計算")
 # --- 2. 處理搜尋 台股代號搜尋ID ---
 search_id = f"{stock_id}.TW" if stock_id.isdigit() else stock_id
 
-st.title("📈 樂活五線譜自動生成")
+st.title("📈 樂活五線譜")
 
 # --- 3. 判斷邏輯：如果按鈕「還沒被按下」 ---
 if not calculate_btn:
