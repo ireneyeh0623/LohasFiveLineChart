@@ -81,15 +81,19 @@ else:
         </style>
         """, unsafe_allow_html=True)
 
+# --- 1. 先定義按鈕 (放在側邊欄設定的最後面) ---
 calculate_btn = st.sidebar.button("開始計算")
 
-# 處理台股代號
+# --- 2. 處理搜尋 台股代號搜尋ID ---
 search_id = f"{stock_id}.TW" if stock_id.isdigit() else stock_id
 
 st.title("📈 樂活五線譜自動生成")
 
+# --- 3. 判斷邏輯：如果按鈕「還沒被按下」 ---
 if calculate_btn or stock_id:
-    # 抓取資料
+    st.info("💡 請點開左上角選單 [ > ] 設定參數後按「開始計算」。")
+else:
+    # --- 4. 按下按鈕後才執行的動作：抓取資料 ---
     data = yf.download(search_id, start=start_date, end=end_date, auto_adjust=True)
     
     # 關鍵修正：過濾掉空值，避免 nan 導致計算失敗
