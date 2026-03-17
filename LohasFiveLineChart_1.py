@@ -43,13 +43,19 @@ else:
         }
         .stMarkdown, p, h1, h2, h3, span { color: black !important; }
         
-        /* 2. 修正日期輸入框右側的黑色區塊 */
-        div[data-baseweb="input"] {
+        /* 2. 徹底消除輸入框右側的陰影與淡淡格線 */
+        div[data-baseweb="input"], 
+        div[data-baseweb="input"] > div,
+        div[data-baseweb="input"] input {
             background-color: white !important;
+            border-color: #dcdcdc !important; /* 設定一個淺灰色的統一邊框 */
+            box-shadow: none !important;      /* 移除所有陰影 */
         }
-        div[data-baseweb="input"] > div {
+        
+        /* 針對日期選取器內部的特殊容器進行修正 */
+        div[role="combobox"] {
             background-color: white !important;
-            color: black !important;
+            border: none !important;
         }
 
         /* 3. 強制按鈕內部的所有文字元素變白 */
@@ -66,12 +72,11 @@ else:
             background-color: #333333 !important;
         }
 
-        /* 4. 側邊欄邊框調整 */
+        /* 4. 側邊欄與輸入框整體調整 */
         [data-testid="stSidebar"] { border-right: 1px solid #f0f2f6; }
         input { 
             color: black !important; 
             background-color: white !important; 
-            border: 1px solid #dcdcdc !important; 
         }
         </style>
         """, unsafe_allow_html=True)
