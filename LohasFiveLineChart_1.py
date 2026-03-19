@@ -140,11 +140,13 @@ else:
             4. 圖表主題 (Radio) 圓圈與文字調整
            ========================================== */        
 
-        /* A. 徹底移除選項文字後方的背景高亮與紅色陰影 */
+        /* A. [強化修正] 徹底移除選項文字後方的背景高亮、紅色框框與陰影 */
         div[data-testid="stRadio"] [data-baseweb="radio"],
-        div[data-testid="stRadio"] label {
-            background-color: transparent !important;
-            box-shadow: none !important;
+        div[data-testid="stRadio"] label,
+        div[data-testid="stRadio"] label div {
+            background-color: transparent !important; /* 強制所有層級背景透明 */
+            background: transparent !important;       /* 預防梯度背景產生的色塊 */
+            box-shadow: none !important;              /* 移除紅色陰影 */
             border: none !important;
         }
 
@@ -155,13 +157,13 @@ else:
 
         /* C. 修改「未選中」時的外框與點點顏色 (深灰色) */
         div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child {
-            border-color: #4F4F4F !important; 
+            border: 1px solid #4F4F4F !important; /* 強制外框顏色 */
         }
         div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child > div {
             background-color: #4F4F4F !important; 
         }
 
-        /* D. [關鍵修改] 當選項被「選中」時，將點點變為白色 (#FFFFFF) */
+        /* D. 當選項被「選中」時，將中心點點變為白色 (#FFFFFF) */
         div[data-testid="stRadio"] label:has(input:checked) div:first-child > div {
             background-color: #FFFFFF !important;
         }
