@@ -159,7 +159,7 @@ else:
 
         /* 修改 Radio 圓圈的外框顏色 (未選中時) */
         div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child {
-            border-color: #FF4B4B !important; 
+            border-color: #4F4F4F !important; 
         }
 
         /* 修改選中時內部的「實心圓點」顏色*/
