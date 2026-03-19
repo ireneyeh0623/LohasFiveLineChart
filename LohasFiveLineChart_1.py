@@ -173,7 +173,7 @@ else:
         }
         
         /* 強制選中時的小點點為白色 */
-        div[data-testid="stRadio"] input:checked + div > div {
+        div[data-testid="stRadio"] input:checked + div div {
             background-color: #FFFFFF !important;
         }
             
