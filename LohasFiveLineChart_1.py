@@ -16,7 +16,6 @@ st.set_page_config(page_title="股價五線譜", layout="wide")
 # ==============================================================================
 
 st.sidebar.header("查詢設定")
-
 # 股票代號輸入：預設為 2330.TW (台積電)
 stock_id = st.sidebar.text_input("股票代號(如2330.TW或AAPL)", "2330.TW")
 # 日期範圍選擇：設定資料擷取的起始與結束時間
@@ -38,37 +37,12 @@ if theme_choice == "深色(深色背景)":
     bg_color = "#0E1117"
     st.markdown("""
         <style>
-        /* ==========================================
-             1. 核心區塊背景與全域文字顏色 (深色模式)
-           ========================================== */
-                
-        /* 強制將側邊欄 [data-testid="stSidebar"]、主程式容器 .stApp 以及頂部標頭 header 設定為深黑色 (#0E1117)，並將基礎文字顏色設為白色 */
+        /* 強制側邊欄、主背景、文字顏色為深色 */
         [data-testid="stSidebar"], .stApp, header { background-color: #0E1117 !important; color: white !important; }
-                
-        /* 確保所有 Markdown 內容、段落文字 (p)、各級標題 (h1-h3) 以及通用標籤 (span) 皆呈現純白色，以確保在深色背景下的易讀性 */
         .stMarkdown, p, h1, h2, h3, span { color: white !important; }
 
-        /* ==========================================
-             2. 輸入組件 (Input) 樣式自定義
-           ========================================== */
-                  
-        /*調整輸入框 (如股票代號輸入框) 的視覺呈現：
-            - color: white 使輸入的文字變為白色
-            - background-color: #262730 設定一個比主背景稍淺的深灰色，增加層次感 */
+        /* 調整輸入框文字顏色 */
         input { color: white !important; background-color: #262730 !important; }
-                
-        /* --- [新增] 深色模式下的按鈕顏色 --- */
-        div.stButton > button {
-            background-color: #31333F !important; /* 改為深灰色 */
-            border: 1px solid #4A4A4A !important;
-            color: white !important;
-        }
-
-        /* --- [新增] 深色模式下的選項文字顏色 --- */
-        div[data-testid="stRadio"] label p {
-            color: #A0A0A0 !important; /* 讓選項文字呈現淺灰色，與背景區分 */
-        }     
-
         </style>
         """, unsafe_allow_html=True)
 else:
@@ -77,126 +51,68 @@ else:
     bg_color = "#FFFFFF"
     st.markdown("""
         <style>
-        /* ==========================================
-            1. 全域背景與文字基礎設定 (亮色模式)
-           ========================================== */
-                
-        /* 強制側邊欄、主畫面與頂部標頭背景設為純白 (#FFFFFF)，文字設為純黑 */
-        /* [data-testid="stSidebar"] 代表側邊欄；.stApp 代表主頁面容器 */
+        /* 1. 強制背景與文字顏色 */
         [data-testid="stSidebar"], .stApp, header { 
             background-color: #FFFFFF !important; 
             color: black !important; 
         }
-                
-        /* 確保所有 Markdown 文字、段落 (p) 與各級標題 (h1-h3) 皆呈現純黑色，以達最高對比度 */
-        [data-testid="stWidgetLabel"] p, .stMarkdown, p, h1, h2, h3, span { 
-            color: black !important; 
-        }
+        .stMarkdown, p, h1, h2, h3, span { color: black !important; }
         
-        /* ==========================================
-            2. 輸入框 (Input) 與 日期選取器 樣式優化
-           ========================================== */     
-
-        /* 強制將所有輸入框 (含日期、文字) 的內部文字設為黑色 */
-        input { 
-            color: #000000 !important; 
-            -webkit-text-fill-color: #000000 !important; /* 強制覆蓋瀏覽器預設填滿色 */
-            background-color: white !important; 
-        }
-                
-        /* 針對 Streamlit 內部的 BaseWeb 輸入框組件進行視覺重構 */
+        /* 2. 徹底消除輸入框右側的陰影與淡淡格線 */
         div[data-baseweb="input"], 
         div[data-baseweb="input"] > div,
         div[data-baseweb="input"] input {
             background-color: white !important;
-            border-color: #dcdcdc !important; /* 使用淺灰色邊框取代預設色，風格較為簡約 */
-            box-shadow: none !important;      /* 徹底移除點擊輸入框時預設產生的藍色陰影 */
+            border-color: #dcdcdc !important; /* 設定一個淺灰色的統一邊框 */
+            box-shadow: none !important;      /* 移除所有陰影 */
         }
         
-                
-        /* ==========================================
-            3. 「開始計算」按鈕自定義視覺
-           ========================================== */
+        /* 針對日期選取器內部的特殊容器進行修正 */
+        div[role="combobox"] {
+            background-color: white !important;
+            border: none !important;
+        }
 
-        /* 設定按鈕主體為深灰色背景、取消圓角邊框感，並將文字設為粗體 */
+        /* 3. 強制按鈕內部的所有文字元素變白 */
         div.stButton > button {
-            background-color: #4F4F4F !important;
-            border: 1px solid #4F4F4F !important;
+            background-color: #000000 !important;
+            border: 1px solid #000000 !important;
             font-weight: bold !important;
         }
-        
-        /* 強制將按鈕內部所有的文字元素 (包含 Span) 設定為白色，避免被全域黑色覆蓋 */
         div.stButton > button * {
             color: #FFFFFF !important;
         }
         
-        /* 定義滑鼠懸停 (Hover) 效果，提供使用者操作回饋 */
         div.stButton > button:hover {
-            background-color: #666666 !important;
-            border-color: #666666 !important;
+            background-color: #333333 !important;
         }
 
-        /* ==========================================
-            4. 圖表主題 (Radio) 圓圈與文字調整
-           ========================================== */        
-
-        /* A. 徹底移除選項文字後方的背景高亮與紅色陰影 */
-        div[data-testid="stRadio"] [data-baseweb="radio"],
-        div[data-testid="stRadio"] label {
-            background-color: transparent !important;
-            box-shadow: none !important;
-            border: none !important;
-        }
-
-        /* B. 修改選項文字顏色為深灰色 */
-        div[data-testid="stRadio"] label p {
-            color: #31333F !important; 
-        }
-
-        /* C. 修改「未選中」時的外框與點點顏色 (深灰色) */
-        div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child {
-            border-color: #4F4F4F !important; 
-        }
-        div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child > div {
-            background-color: #4F4F4F !important; 
-        }
-
-        /* D. [關鍵修改] 當選項被「選中」時，將點點變為白色 (#FFFFFF) */
-        div[data-testid="stRadio"] label:has(input:checked) div:first-child > div {
-            background-color: #FFFFFF !important;
-        }
-
-        /* E. 修改選中時的圓圈背景為紅色 (#FF4B4B) */
-        div[data-testid="stRadio"] input:checked + div {
-            background-color: #FF4B4B !important; 
-            border-color: #FF4B4B !important;      
-        }
-
-        /* ==========================================
-             5. 介面層次調整 (側邊欄邊框與文字強化)
-           ========================================== */
-            
-        /* 在側邊欄右側加上一條極淡的灰色格線，幫助使用者區分操作區與圖表顯示區 */
+        /* 4. 側邊欄與輸入框整體調整 */
         [data-testid="stSidebar"] { border-right: 1px solid #f0f2f6; }
-                
+        input { 
+            color: black !important; 
+            background-color: white !important; 
+        }
         </style>
         """, unsafe_allow_html=True)
+
 
 # ==============================================================================
 # 4. 主程式執行邏輯
 # ==============================================================================
 
-st.title("📈 股價五線譜")
+st.title("📈 長線股價五線譜")
 
 # 預先處理搜尋代號邏輯：補全台股後綴
 search_id = f"{stock_id}.TW" if stock_id.isdigit() else stock_id
 
-# 判斷邏輯：如果按鈕「還沒被按下」 ---
+# 判斷邏輯：如果按鈕「還沒被按下」
 if not calculate_btn:
-    st.info("💡 請點開左上角選單 [ > ] 在左側面板設定參數後按「開始計算」即可產出圖表")
+    st.info("💡 請點開左上角選單 [ >> ] 在左側面板設定參數後，按「開始計算」即可產出圖表")
+# 判斷邏輯：按下按鈕後才執行抓取資料的動作：
 else:
     # 顯示股票代碼
-    st.write(f"### {search_id}") 
+    st.markdown(f"<h3 style='color: {font_color};'>{search_id}</h3>", unsafe_allow_html=True)
 
     # --- A. 數據下載與清理 ---
     # 使用 auto_adjust=True 取得還原股價，反映真實報酬率
@@ -210,7 +126,7 @@ else:
             df.columns = df.columns.get_level_values(0)
             
         # 排除無交易資料的日期 (NaN)，確保計算精確度
-        df = df.dropna(subset=['Close'])
+        df = df.dropna(subset=['Close']) 
         df['Close_1D'] = df['Close'].values.flatten()
         # 建立時間索引 (0, 1, 2...) 作為線性回歸的自變數 X
         df['Time_Idx'] = np.arange(len(df)) 
@@ -253,6 +169,7 @@ else:
                 fig.add_trace(go.Scatter(x=df['Date'], y=df[band], name=names[idx], 
                                          line=dict(dash='dash' if 'Trend' not in band else 'solid', 
                                                    color=colors[idx], width=1)))
+
             # 圖表版面優化
             fig.update_layout(
                 height=600, 
