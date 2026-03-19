@@ -141,12 +141,25 @@ else:
            ========================================== */        
 
         /* A. 徹底移除選項文字後方的背景高亮與紅色陰影 */
-        div[data-testid="stRadio"] [data-baseweb="radio"],
-        div[data-testid="stRadio"] label {
+        /* 基礎樣式清除（保留） */
+        div[data-testid="stRadio"] [data-baseweb="radio"] {
             background-color: transparent !important;
             box-shadow: none !important;
             border: none !important;
         }
+                
+        /* label 保留最小干預 */
+        div[data-testid="stRadio"] label {
+            background-color: transparent !important;
+        }
+
+        /* 移除紅框（focus） */
+        div[data-testid="stRadio"] label:focus,
+        div[data-testid="stRadio"] label:focus-visible,
+        div[data-testid="stRadio"] label:has(input:checked) {
+            outline: none !important;
+            box-shadow: none !important;
+        }             
 
         /* B. 修改選項文字顏色為深灰色 */
         div[data-testid="stRadio"] label p {
