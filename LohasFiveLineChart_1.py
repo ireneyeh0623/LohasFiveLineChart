@@ -140,20 +140,24 @@ else:
             4. 圖表主題 (Radio) 圓圈與文字調整
            ========================================== */        
 
-        /* A. 徹底消除選中時文字後方的紅色/灰色底色與陰影 */
+        /* 1. [解決問題 2 & 3] 徹底消除文字旁的紅塊與黑框 */
+        /* 我們將背景設為 transparent，並移除所有 border 與 outline */
+        div[data-testid="stRadio"] [data-baseweb="radio"],
         div[data-testid="stRadio"] label,
-        div[data-testid="stRadio"] [data-baseweb="radio"] {
+        div[data-testid="stRadio"] div[role="radiogroup"] > div {
             background-color: transparent !important;
-            box-shadow: none !important;
-            outline: none !important; /* 消除黑色邊框線 */
+            background: transparent !important;
+            border: none !important;    /* 消除黑色框線 */
+            outline: none !important;   /* 消除點選時的焦點框 */
+            box-shadow: none !important; /* 消除紅色陰影塊 */
         }
 
-        /* B. 修改選項文字顏色 */
+        /* 2. 修改選項文字顏色 */
         div[data-testid="stRadio"] label p {
             color: #31333F !important; 
         }
 
-        /* C. 修改「未選中」時的外框與點點 (深灰色) */
+        /* 3. 修改「未選中」時的外框與點點 (深灰色) */
         div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child {
             border: 1px solid #4F4F4F !important; 
         }
@@ -161,14 +165,14 @@ else:
             background-color: #4F4F4F !important; 
         }
 
-        /* D. [關鍵修正] 選中時：將外框與背景變紅，內點變白 */
-        /* 透過 input:checked + div 來定位「圓圈本身」，不影響文字 */
+        /* 4. [解決問題 1] 選中時：變為紅底白點 */
+        /* 只針對圓圈本身 (input:checked + div) 著色，不影響文字區域 */
         div[data-testid="stRadio"] input:checked + div {
             background-color: #FF4B4B !important; 
             border-color: #FF4B4B !important;      
         }
         
-        /* E. 強制選中時的小點點為白色 */
+        /* 強制選中時的小點點為白色 */
         div[data-testid="stRadio"] input:checked + div > div {
             background-color: #FFFFFF !important;
         }
@@ -194,10 +198,10 @@ st.title("📈 股價五線譜")
 search_id = f"{stock_id}.TW" if stock_id.isdigit() else stock_id
 
 # 顯示股票代碼
-st.write(f"### {search_id}")
+if calculate_btn:
+    st.write(f"### {search_id}")
 
-
-# --- 3. 判斷邏輯：如果按鈕「還沒被按下」 ---
+# 判斷邏輯：如果按鈕「還沒被按下」 ---
 if not calculate_btn:
     st.info("💡 請點開左上角選單 [ > ] 在左側面板設定參數後按「開始計算」即可產出圖表")
 else:
