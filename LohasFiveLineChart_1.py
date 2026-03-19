@@ -140,29 +140,36 @@ else:
             4. 圖表主題 (Radio) 圓圈與文字調整
            ========================================== */        
 
-        /* 消除選項文字後方的灰色高亮方塊：針對 baseweb 底層容器進行徹底透明化 */
+        /* A. 徹底移除選項文字後方的背景高亮與紅色陰影 */
         div[data-testid="stRadio"] [data-baseweb="radio"],
         div[data-testid="stRadio"] label {
-            background-color: transparent !important; /* 強制透明 */
-            box-shadow: none !important;              /* 移除任何可能的陰影 */
-            border: none !important;                  /* 確保沒有邊框 */
+            background-color: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
         }
 
-        /* 修改 Radio 圓圈的外框顏色 (未選中時) */
+        /* B. 修改選項文字顏色為深灰色 */
+        div[data-testid="stRadio"] label p {
+            color: #31333F !important; 
+        }
+
+        /* C. 修改「未選中」時的外框與點點顏色 (深灰色) */
         div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child {
             border-color: #4F4F4F !important; 
         }
-
-        /* 修改選中時內部的「點點」顏色 */
-        div[data-testid="stRadio"] input:checked + div {
+        div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child > div {
             background-color: #4F4F4F !important; 
-            border-color: #4F4F4F !important;      
         }
 
-        /* 額外強制：當 Input 被選取時，更新圓圈狀態 */
+        /* D. [關鍵修改] 當選項被「選中」時，將點點變為白色 (#FFFFFF) */
+        div[data-testid="stRadio"] label:has(input:checked) div:first-child > div {
+            background-color: #FFFFFF !important;
+        }
+
+        /* E. 修改選中時的圓圈背景為紅色 (#FF4B4B) */
         div[data-testid="stRadio"] input:checked + div {
-            background-color: #4F4F4F !important;
-            border-color: #4F4F4F !important;
+            background-color: #FF4B4B !important; 
+            border-color: #FF4B4B !important;      
         }
 
         /* ==========================================
@@ -183,10 +190,6 @@ st.title("📈 股價五線譜")
 
 # 預先處理搜尋代號邏輯：補全台股後綴
 search_id = f"{stock_id}.TW" if stock_id.isdigit() else stock_id
-
-# # 顯示股票代碼
-# if calculate_btn:
-#     st.write(f"### {search_id}")
 
 # 判斷邏輯：如果按鈕「還沒被按下」 ---
 if not calculate_btn:
