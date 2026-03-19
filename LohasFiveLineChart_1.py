@@ -151,18 +151,6 @@ else:
             )
             st.plotly_chart(fig, use_container_width=True)
 
-            # --- [修正版] 安全顯示公司名稱 ---
-            # 這裡加上 try-except 以防 Yahoo 封鎖 .info 功能
-            try:
-                # 只有在下載成功後才抓名稱
-                ticker_obj = yf.Ticker(search_id)
-                # 使用 .get 預防 Key 缺失，如果被鎖 IP 則回傳代號
-                comp_name = ticker_obj.info.get('longName', search_id)
-                st.markdown(f"### 🏢 {search_id} - {comp_name}")
-            except Exception:
-                # 萬一被 Rate Limit，至少保證網頁不會壞掉，改顯示代號
-                st.markdown(f"### 🏢 {search_id}")
-
             # --- 數據摘要 ---
             st.header("📊 數據摘要")
             last_price = df['Close_1D'].iloc[-1]
