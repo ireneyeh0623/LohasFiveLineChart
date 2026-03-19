@@ -138,9 +138,10 @@ else:
             4. 圖表主題 (Radio) 圓圈與文字調整
            ========================================== */        
 
-        /* --- 亮色模式下的選項文字顏色 --- */
-        div[data-testid="stRadio"] label p {
-            color: #31333F !important; 
+        /* 移除選項文字後方的灰色背景/高亮 */
+        div[data-testid="stRadio"] label {
+            background-color: transparent !important; /* 強制透明，消除灰色區塊 */
+            box-shadow: none !important;
         }
 
         /* 修改 Radio 圓圈的外框顏色 (未選中時) */
@@ -153,21 +154,20 @@ else:
             background-color: #4F4F4F !important; 
             border-color: #4F4F4F !important;      
         }
-                
+
+        /* 額外強制：當 Input 被選取時，更新圓圈狀態 */
+        div[data-testid="stRadio"] input:checked + div {
+            background-color: #4F4F4F !important;
+            border-color: #4F4F4F !important;
+        }       
 
         /* ==========================================
              5. 介面層次調整 (側邊欄邊框與文字強化)
            ========================================== */
-
-                
+            
         /* 在側邊欄右側加上一條極淡的灰色格線，幫助使用者區分操作區與圖表顯示區 */
         [data-testid="stSidebar"] { border-right: 1px solid #f0f2f6; }
                 
-        /* 確保所有 Input 文字內容在白色背景下依然維持黑色顯示，避免因主題切換產生的文字「消失」現象 */
-        input { 
-            color: black !important; 
-            background-color: #31333F !important; 
-        }
         </style>
         """, unsafe_allow_html=True)
 
