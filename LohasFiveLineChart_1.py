@@ -98,6 +98,11 @@ else:
     
     # 關鍵修正：過濾掉空值，避免 nan 導致計算失敗
     if not data.empty:
+        # 取得公司名稱
+        ticker_info = yf.Ticker(search_id)
+        long_name = ticker_info.info.get('longName', search_id)
+        st.write(f"### {search_id} - {long_name}")
+
         df = data.copy().reset_index()
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = df.columns.get_level_values(0)
