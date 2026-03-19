@@ -140,43 +140,27 @@ else:
             4. 圖表主題 (Radio) 圓圈與文字調整
            ========================================== */        
 
-         /* 消除選項後方的灰色高亮方塊：針對 baseweb 底層容器設定 */
-        div[data-testid="stRadio"] [data-baseweb="radio"] {
-            background-color: transparent !important;
-            box-shadow: none !important;
-        }
-
-        /* 移除標籤本身的背景設定 */
+        /* 移除選項文字後方的灰色背景/高亮 */
         div[data-testid="stRadio"] label {
-            background-color: transparent !important;
-            border: none !important;
-        }
-
-        /* 修改選項文字顏色 */
-        div[data-testid="stRadio"] label p {
-            color: #31333F !important;
+            background-color: transparent !important; /* 強制透明，消除灰色區塊 */
+            box-shadow: none !important;
         }
 
         /* 修改 Radio 圓圈的外框顏色 (未選中時) */
         div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child {
-            border-color: #4F4F4F !important;
+            border-color: #4F4F4F !important; 
         }
 
-        /* 修改未選中時內部的點點顏色 */
-        div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child > div {
-            background-color: #4F4F4F !important;
-        }
-
-        /* 修改選中時內部的「實心圓點」顏色*/
-        /* 針對內層 div 進行填色控制 */
-        div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child > div {
-            background-color: #FFFFFF !important;
-        }
-
-        /* 修改選中時的圓圈背景顏色為紅色 (#FF4B4B)*/
+        /* 修改選中時內部的「點點」顏色為深灰色 */
         div[data-testid="stRadio"] input:checked + div {
-            background-color: #FF4B4B !important;
-            border-color: #FF4B4B !important;      
+            background-color: #4F4F4F !important; 
+            border-color: #4F4F4F !important;      
+        }
+
+        /* 額外強制：當 Input 被選取時，更新圓圈狀態 */
+        div[data-testid="stRadio"] input:checked + div {
+            background-color: #4F4F4F !important;
+            border-color: #4F4F4F !important;
         }
 
         /* ==========================================
