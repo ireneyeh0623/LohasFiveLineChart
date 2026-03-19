@@ -153,10 +153,25 @@ else:
             background-color: transparent !important;
         }
 
-        /* 移除紅框（focus） */
-        div[data-testid="stRadio"] label:focus,
-        div[data-testid="stRadio"] label:focus-visible,
-        div[data-testid="stRadio"] label:has(input:checked) {
+        /*  強制移除選中那一整條的紅色背景與框 */
+        div[data-testid="stRadio"] div[role="radiogroup"] > label {
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+            outline: none !important;
+        }
+
+        /*  選中狀態（真正元兇） */
+        div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) {
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+            outline: none !important;
+        }
+
+        /*  focus 狀態（滑鼠點擊後那一圈） */
+        div[data-testid="stRadio"] div[role="radiogroup"] > label:focus,
+        div[data-testid="stRadio"] div[role="radiogroup"] > label:focus-visible {
             outline: none !important;
             box-shadow: none !important;
         }             
