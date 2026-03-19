@@ -152,7 +152,7 @@ else:
             border: none !important;
         }
         
-        /* 修改選項文字顏色為深灰色 */
+        /* 修改選項文字顏色 */
         div[data-testid="stRadio"] label p {
             color: #31333F !important; 
         }
@@ -160,6 +160,11 @@ else:
         /* 修改 Radio 圓圈的外框顏色 (未選中時) */
         div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child {
             border-color: #4F4F4F !important; 
+        }
+
+        /* 修改未選中時內部的點點顏色 */
+        div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child > div {
+            background-color: #4F4F4F !important; 
         }
 
         /* 修改選中時內部的「實心圓點」顏色*/
@@ -173,12 +178,7 @@ else:
             background-color: #FF4B4B !important; 
             border-color: #FF4B4B !important;      
         }
-        
-        /* 額外覆蓋：確保選取狀態的背景色不再出現 */
-        div[data-testid="stRadio"] input:checked + div {
-            background-color: transparent !important; /* 讓點點周圍保持透明 */
-            border-color: #4F4F4F !important;
-        }      
+            
 
         /* ==========================================
              5. 介面層次調整 (側邊欄邊框與文字強化)
