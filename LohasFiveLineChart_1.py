@@ -5,28 +5,56 @@ import numpy as np
 import plotly.graph_objects as go
 from datetime import datetime
 
-# 網頁配置
+# ==============================================================================
+# 1. 系統環境配置
+# ==============================================================================
+
 st.set_page_config(page_title="股價五線譜", layout="wide")
 
-# --- 側邊欄：查詢設定 ---
+# ==============================================================================
+# 2. 側邊欄：使用者參數輸入區
+# ==============================================================================
+
 st.sidebar.header("查詢設定")
+
+# 股票代號輸入：預設為 2330.TW (台積電)
 stock_id = st.sidebar.text_input("股票代號(如2330.TW或AAPL)", "2330.TW")
+# 日期範圍選擇：設定資料擷取的起始與結束時間
 start_date = st.sidebar.date_input("起始日期(YYYY/MM/DD)", datetime(2022, 10, 3))
 end_date = st.sidebar.date_input("結束日期(YYYY/MM/DD)", datetime.now())
-
+# 視覺主題切換：根據網頁環境調整背景顏色
 theme_choice = st.sidebar.radio("圖表主題(對應網頁背景)", ["亮色(白色背景)", "深色(深色背景)"])
+# 開始計算觸發按鈕
+calculate_btn = st.sidebar.button("開始計算")
 
-# --- 強制背景色切換邏輯 (CSS) ---
+# ==============================================================================
+# 3. 視覺樣式優化 (CSS 強制覆蓋背景色切換邏輯)
+# ==============================================================================
+
+# 根據主題選擇，動態調整 Streamlit 元件與圖表的顏色配比
 if theme_choice == "深色(深色背景)":
     chart_template = "plotly_dark"
     font_color = "white"
     bg_color = "#0E1117"
     st.markdown("""
         <style>
-        /* 強制側邊欄、主背景、文字顏色為深色 */
+        /* ==========================================
+             1. 核心區塊背景與全域文字顏色 (深色模式)
+           ========================================== */
+                
+        /* 強制將側邊欄 [data-testid="stSidebar"]、主程式容器 .stApp 以及頂部標頭 header 設定為深黑色 (#0E1117)，並將基礎文字顏色設為白色 */
         [data-testid="stSidebar"], .stApp, header { background-color: #0E1117 !important; color: white !important; }
+                
+        /* 確保所有 Markdown 內容、段落文字 (p)、各級標題 (h1-h3) 以及通用標籤 (span) 皆呈現純白色，以確保在深色背景下的易讀性 */
         .stMarkdown, p, h1, h2, h3, span { color: white !important; }
-        /* 調整輸入框文字顏色 */
+
+        /* ==========================================
+             2. 輸入組件 (Input) 樣式自定義
+           ========================================== */
+                  
+        /*調整輸入框 (如股票代號輸入框) 的視覺呈現：
+            - color: white 使輸入的文字變為白色
+            - background-color: #262730 設定一個比主背景稍淺的深灰色，增加層次感 */
         input { color: white !important; background-color: #262730 !important; }
         </style>
         """, unsafe_allow_html=True)
@@ -36,44 +64,69 @@ else:
     bg_color = "#FFFFFF"
     st.markdown("""
         <style>
-        /* 1. 強制背景與文字顏色 */
+        /* ==========================================
+            1. 全域背景與文字基礎設定 (亮色模式)
+           ========================================== */
+                
+        /* 強制側邊欄、主畫面與頂部標頭背景設為純白 (#FFFFFF)，文字設為純黑 */
+        /* [data-testid="stSidebar"] 代表側邊欄；.stApp 代表主頁面容器 */
         [data-testid="stSidebar"], .stApp, header { 
             background-color: #FFFFFF !important; 
             color: black !important; 
         }
+                
+        /* 確保所有 Markdown 文字、段落 (p) 與各級標題 (h1-h3) 皆呈現純黑色，以達最高對比度 */
         .stMarkdown, p, h1, h2, h3, span { color: black !important; }
         
-        /* 2. 徹底消除輸入框右側的陰影與淡淡格線 */
+        /* ==========================================
+            2. 輸入框 (Input) 與 日期選取器 樣式優化
+           ========================================== */     
+
+        /* 針對 Streamlit 內部的 BaseWeb 輸入框組件進行視覺重構 */
         div[data-baseweb="input"], 
         div[data-baseweb="input"] > div,
         div[data-baseweb="input"] input {
             background-color: white !important;
-            border-color: #dcdcdc !important; /* 設定一個淺灰色的統一邊框 */
-            box-shadow: none !important;      /* 移除所有陰影 */
+            border-color: #dcdcdc !important; /* 使用淺灰色邊框取代預設色，風格較為簡約 */
+            box-shadow: none !important;      /* 徹底移除點擊輸入框時預設產生的藍色陰影 */
         }
         
-        /* 針對日期選取器內部的特殊容器進行修正 */
+        /* 專門修正日期選擇器 (Date Picker) 或下拉選單內部的容器背景顏色 */
+        /* role="combobox" 是這些複雜元件的標準 ARIA 標籤 */
         div[role="combobox"] {
             background-color: white !important;
             border: none !important;
         }
+                
+        /* ==========================================
+            3. 「開始計算」按鈕自定義視覺 (純黑簡約風)
+           ========================================== */
 
-        /* 3. 強制按鈕內部的所有文字元素變白 */
+        /* 設定按鈕主體為純黑色背景、取消圓角邊框感，並將文字設為粗體 */
         div.stButton > button {
-            background-color: #000000 !important;
-            border: 1px solid #000000 !important;
+            background-color: #31333F !important;
+            border: 1px solid #31333F !important;
             font-weight: bold !important;
         }
+        
+        /* 強制將按鈕內部所有的文字元素 (包含 Span) 設定為白色，避免被全域黑色覆蓋 */
         div.stButton > button * {
             color: #FFFFFF !important;
         }
         
+        /* 定義滑鼠懸停 (Hover) 效果：將背景色由純黑調淺為深灰色 (#333333)，提供使用者操作回饋 */
         div.stButton > button:hover {
             background-color: #333333 !important;
         }
 
-        /* 4. 側邊欄與輸入框整體調整 */
+        /* ==========================================
+             4. 介面層次調整 (側邊欄邊框與文字強化)
+           ========================================== */
+
+        /* 在側邊欄右側加上一條極淡的灰色格線，幫助使用者區分操作區與圖表顯示區 */
         [data-testid="stSidebar"] { border-right: 1px solid #f0f2f6; }
+                
+        /* 確保所有 Input 文字內容在白色背景下依然維持黑色顯示，避免因主題切換產生的文字「消失」現象 */
         input { 
             color: black !important; 
             background-color: white !important; 
@@ -81,67 +134,80 @@ else:
         </style>
         """, unsafe_allow_html=True)
 
-# --- 1. 先定義按鈕 (放在側邊欄設定的最後面) ---
-calculate_btn = st.sidebar.button("開始計算")
-
-# --- 2. 處理搜尋 台股代號搜尋ID ---
-search_id = f"{stock_id}.TW" if stock_id.isdigit() else stock_id
+# ==============================================================================
+# 4. 主程式執行邏輯
+# ==============================================================================
 
 st.title("📈 股價五線譜")
 
+# 預先處理搜尋代號邏輯：補全台股後綴
+search_id = f"{stock_id}.TW" if stock_id.isdigit() else stock_id
+
+
 # --- 3. 判斷邏輯：如果按鈕「還沒被按下」 ---
 if not calculate_btn:
-    st.info("💡 請點開左上角選單 [ > ] 設定參數後按「開始計算」。")
+    st.info("💡 請點開左上角選單 [ > ] 在左側面板設定參數後按「開始計算」即可產出圖表")
 else:
-    # --- 4. 按下按鈕後才執行的動作：抓取資料 ---
+    # --- A. 數據下載與清理 ---
+    # 使用 auto_adjust=True 取得還原股價，反映真實報酬率
     data = yf.download(search_id, start=start_date, end=end_date, auto_adjust=True)
     
-    # 關鍵修正：過濾掉空值，避免 nan 導致計算失敗
     if not data.empty:
+        # 重設索引（reset_index）_將yfinance 下載後的原始資料，日期轉為可以被讀取的一般欄位後，建立數字序列（回歸必備），防止計算錯誤
         df = data.copy().reset_index()
+        # 處理 yfinance 可能產生的多層欄位索引 (MultiIndex)
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = df.columns.get_level_values(0)
             
-        # 移除任何包含 NaN 的列
+        # 排除無交易資料的日期 (NaN)，確保計算精確度
         df = df.dropna(subset=['Close'])
-        
         df['Close_1D'] = df['Close'].values.flatten()
+        # 建立時間索引 (0, 1, 2...) 作為線性回歸的自變數 X
         df['Time_Idx'] = np.arange(len(df)) 
         
-        # --- 計算股價五線譜 (線性回歸) ---
+        # --- B. 核心原理：線性回歸與標準差軌道計算 ---
         if len(df) > 1:
+            # 1. 線性回歸：找出股價的中長線趨勢中心
+            # 公式為：$y = ax + b$ (a=斜率, b=截距)
             z = np.polyfit(df['Time_Idx'], df['Close_1D'], 1)
             p = np.poly1d(z)
-            df['Trend_Line'] = p(df['Time_Idx'])
+            df['Trend_Line'] = p(df['Time_Idx']) # 產出回歸趨勢線數據
             
+            # 2. 計算離差標準差 (Standard Deviation)：衡量股價對趨勢線的波動幅度
+            # 標準差愈大，代表股價波動愈劇烈，軌道間距也會隨之拉大
             std_dev = (df['Close_1D'] - df['Trend_Line']).std()
-            df['Upper_2'] = df['Trend_Line'] + 2 * std_dev
-            df['Upper_1'] = df['Trend_Line'] + 1 * std_dev
-            df['Lower_1'] = df['Trend_Line'] - 1 * std_dev
-            df['Lower_2'] = df['Trend_Line'] - 2 * std_dev
 
-            # --- 繪製圖表 ---
+            # 3. 建立五線譜軌道
+            # 高點軌道：趨勢中線 + 1倍或2倍標準差
+            # 低點軌道：趨勢中線 - 1倍或2倍標準差
+            df['Upper_2'] = df['Trend_Line'] + 2 * std_dev # 極端樂觀線
+            df['Upper_1'] = df['Trend_Line'] + 1 * std_dev # 樂觀線
+            df['Lower_1'] = df['Trend_Line'] - 1 * std_dev # 悲觀線
+            df['Lower_2'] = df['Trend_Line'] - 2 * std_dev # 極端悲觀線
+
+            # --- C. 視覺化繪圖 (Plotly 互動式圖表) ---
             fig = go.Figure()
             
-            # 收盤價
+            # 設定收盤價曲線顏色，使其在不同背景下清晰可見
             line_color = "white" if theme_choice == "深色(深色背景)" else "black"
             fig.add_trace(go.Scatter(x=df['Date'], y=df['Close_1D'], name='收盤價', 
                                      line=dict(color=line_color, width=1.5)))
             
-            # 五線譜線段
+            # 定義各軌道線的顏色與名稱
             colors = ['#FF4136', '#FF851B', '#0074D9', '#2ECC40', '#3D9970']
             names = ['極端樂觀', '樂觀', '趨勢中線', '悲觀', '極端悲觀']
             bands = ['Upper_2', 'Upper_1', 'Trend_Line', 'Lower_1', 'Lower_2']
             
             for idx, band in enumerate(bands):
+                # 趨勢中線使用實線，其餘 SD 軌道使用虛線以利區分
                 fig.add_trace(go.Scatter(x=df['Date'], y=df[band], name=names[idx], 
                                          line=dict(dash='dash' if 'Trend' not in band else 'solid', 
                                                    color=colors[idx], width=1)))
-
+            # 圖表版面優化
             fig.update_layout(
                 height=600, 
                 template=chart_template, 
-                hovermode='x unified',
+                hovermode='x unified', # 統一滑鼠懸停資訊
                 paper_bgcolor=bg_color,
                 plot_bgcolor=bg_color,
                 font=dict(color=font_color),
@@ -151,17 +217,20 @@ else:
             )
             st.plotly_chart(fig, use_container_width=True)
 
-            # --- 數據摘要 ---
+            # --- D. 數據摘要與投資評語 ---
             st.header("📊 數據摘要")
-            last_price = df['Close_1D'].iloc[-1]
-            trend_val = df['Trend_Line'].iloc[-1]
+            last_price = df['Close_1D'].iloc[-1] # 最後一筆交易價格
+            trend_val = df['Trend_Line'].iloc[-1] # 對應日期的趨勢線值
+            # 計算目前股價落在幾倍標準差位置 ($\sigma$ 值)
             sigma = (last_price - trend_val) / std_dev
             
+            # 儀表板數值呈現
             col1, col2, col3 = st.columns(3)
             col1.metric("最後收盤價", f"{last_price:.2f}")
             col2.metric("回歸中線", f"{trend_val:.2f}")
             col3.metric("目前區間", f"{sigma:.2f} σ")
             
+            # 根據 $\sigma$ (Sigma) 值給予自動化投資評註
             if sigma > 2:
                 st.error(f"⚠️ 目前價格極度高估（高於中線 {sigma:.2f} 個標準差）")
             elif sigma < -2:
