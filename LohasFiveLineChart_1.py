@@ -111,12 +111,6 @@ else:
             box-shadow: none !important;      /* 徹底移除點擊輸入框時預設產生的藍色陰影 */
         }
         
-        /* 專門修正日期選擇器 (Date Picker) 或下拉選單內部的容器背景顏色 */
-        /* role="combobox" 是這些複雜元件的標準 ARIA 標籤 */
-        div[role="combobox"] {
-            background-color: white !important;
-            border: none !important;
-        }
                 
         /* ==========================================
             3. 「開始計算」按鈕自定義視覺
@@ -139,15 +133,33 @@ else:
             background-color: #666666 !important;
             border-color: #666666 !important;
         }
-        
-        /* --- [新增] 亮色模式下的選項文字顏色 --- */
-        div[data-testid="stRadio"] label p {
-            color: #31333F !important; /* 將選項文字從純黑改為深灰色 */
 
         /* ==========================================
-             4. 介面層次調整 (側邊欄邊框與文字強化)
+            4. 圖表主題 (Radio) 圓圈與文字調整
+           ========================================== */        
+
+        /* --- 亮色模式下的選項文字顏色 --- */
+        div[data-testid="stRadio"] label p {
+            color: #31333F !important; 
+        }
+
+        /* 修改 Radio 圓圈的外框顏色 (未選中時) */
+        div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child {
+            border-color: #4F4F4F !important; 
+        }
+
+        /* 修改選中時內部的「點點」顏色為深灰色 */
+        div[data-testid="stRadio"] input:checked + div {
+            background-color: #4F4F4F !important; 
+            border-color: #4F4F4F !important;      
+        }
+                
+
+        /* ==========================================
+             5. 介面層次調整 (側邊欄邊框與文字強化)
            ========================================== */
 
+                
         /* 在側邊欄右側加上一條極淡的灰色格線，幫助使用者區分操作區與圖表顯示區 */
         [data-testid="stSidebar"] { border-right: 1px solid #f0f2f6; }
                 
