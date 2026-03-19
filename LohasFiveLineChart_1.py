@@ -140,43 +140,43 @@ else:
             4. 圖表主題 (Radio) 圓圈與文字調整
            ========================================== */        
 
-        /* 1. [解決問題 2 & 3] 徹底消除文字旁的紅塊與黑框 */
-        /* 我們將背景設為 transparent，並移除所有 border 與 outline */
-        div[data-testid="stRadio"] [data-baseweb="radio"],
+        /* [關鍵 1] 徹底消滅「黑框」與「文字旁紅塊」 */
+        /* 使用 :focus-within 和通配符，強制把所有「非圓圈」的背景和邊框關掉 */
+        div[data-testid="stRadio"] div[data-baseweb="radio"],
+        div[data-testid="stRadio"] div[role="radiogroup"] div,
         div[data-testid="stRadio"] label,
-        div[data-testid="stRadio"] div[role="radiogroup"] > div {
+        div[data-testid="stRadio"] label * {
             background-color: transparent !important;
             background: transparent !important;
-            border: none !important;    /* 消除黑色框線 */
-            outline: none !important;   /* 消除點選時的焦點框 */
-            box-shadow: none !important; /* 消除紅色陰影塊 */
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            -webkit-box-shadow: none !important;
         }
 
-        /* 2. 修改選項文字顏色 */
-        div[data-testid="stRadio"] label p {
-            color: #31333F !important; 
-        }
-
-        /* 3. 修改「未選中」時的外框與點點 (深灰色) */
+        /* [關鍵 2] 救回被關掉的「圓圈外框」 */
+        /* 只有這個特定的層級需要邊框，其他層級維持透明 */
         div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child {
-            border: 1px solid #4F4F4F !important; 
-        }
-        div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child > div {
-            background-color: #4F4F4F !important; 
+            border: 1px solid #4F4F4F !important;
+            background-color: transparent !important;
         }
 
-        /* 4. [解決問題 1] 選中時：變為紅底白點 */
-        /* 只針對圓圈本身 (input:checked + div) 著色，不影響文字區域 */
+        /* [關鍵 3] 選中時：將「圓圈」變紅，且「中心點」變白 */
+        /* A. 圓圈背景變紅 */
         div[data-testid="stRadio"] input:checked + div {
             background-color: #FF4B4B !important; 
             border-color: #FF4B4B !important;      
         }
         
-        /* 強制選中時的小點點為白色 */
+        /* B. 中心點變白：使用最廣泛的後代選擇器，確保抓到最深層的 div */
         div[data-testid="stRadio"] input:checked + div div {
             background-color: #FFFFFF !important;
         }
-            
+
+        /* [關鍵 4] 修改選項文字顏色 */
+        div[data-testid="stRadio"] label p {
+            color: #31333F !important; 
+        }
 
         /* ==========================================
              5. 介面層次調整 (側邊欄邊框與文字強化)
