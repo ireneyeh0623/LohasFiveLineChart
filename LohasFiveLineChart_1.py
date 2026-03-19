@@ -176,6 +176,12 @@ else:
             box-shadow: none !important;
         }             
 
+        /*  核彈級覆蓋 */
+        div[data-testid="stRadio"] * {
+            outline: none !important;
+        }
+                
+
         /* B. 修改選項文字顏色為深灰色 */
         div[data-testid="stRadio"] label p {
             color: #31333F !important; 
