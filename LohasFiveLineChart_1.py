@@ -140,38 +140,37 @@ else:
             4. 圖表主題 (Radio) 圓圈與文字調整
            ========================================== */        
 
-        /* A. [強化修正] 徹底移除選項文字後方的背景高亮、紅色框框與陰影 */
-        div[data-testid="stRadio"] [data-baseweb="radio"],
+        /* A. 徹底消除選中時文字後方的紅色/灰色底色與陰影 */
         div[data-testid="stRadio"] label,
-        div[data-testid="stRadio"] label div {
-            background-color: transparent !important; /* 強制所有層級背景透明 */
-            background: transparent !important;       /* 預防梯度背景產生的色塊 */
-            box-shadow: none !important;              /* 移除紅色陰影 */
-            border: none !important;
+        div[data-testid="stRadio"] [data-baseweb="radio"] {
+            background-color: transparent !important;
+            box-shadow: none !important;
+            outline: none !important; /* 消除黑色邊框線 */
         }
 
-        /* B. 修改選項文字顏色為深灰色 */
+        /* B. 修改選項文字顏色 */
         div[data-testid="stRadio"] label p {
             color: #31333F !important; 
         }
 
-        /* C. 修改「未選中」時的外框與點點顏色 (深灰色) */
+        /* C. 修改「未選中」時的外框與點點 (深灰色) */
         div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child {
-            border: 1px solid #4F4F4F !important; /* 強制外框顏色 */
+            border: 1px solid #4F4F4F !important; 
         }
         div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child > div {
             background-color: #4F4F4F !important; 
         }
 
-        /* D. 當選項被「選中」時，將中心點點變為白色 (#FFFFFF) */
-        div[data-testid="stRadio"] label:has(input:checked) div:first-child > div {
-            background-color: #FFFFFF !important;
-        }
-
-        /* E. 修改選中時的圓圈背景為紅色 (#FF4B4B) */
+        /* D. [關鍵修正] 選中時：將外框與背景變紅，內點變白 */
+        /* 透過 input:checked + div 來定位「圓圈本身」，不影響文字 */
         div[data-testid="stRadio"] input:checked + div {
             background-color: #FF4B4B !important; 
             border-color: #FF4B4B !important;      
+        }
+        
+        /* E. 強制選中時的小點點為白色 */
+        div[data-testid="stRadio"] input:checked + div > div {
+            background-color: #FFFFFF !important;
         }
             
 
