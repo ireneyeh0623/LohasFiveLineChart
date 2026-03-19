@@ -140,10 +140,12 @@ else:
             4. 圖表主題 (Radio) 圓圈與文字調整
            ========================================== */        
 
-        /* 移除選項文字後方的灰色背景/高亮 */
+        /* 消除選項文字後方的灰色高亮方塊：針對 baseweb 底層容器進行徹底透明化 */
+        div[data-testid="stRadio"] [data-baseweb="radio"],
         div[data-testid="stRadio"] label {
-            background-color: transparent !important; /* 強制透明，消除灰色區塊 */
-            box-shadow: none !important;
+            background-color: transparent !important; /* 強制透明 */
+            box-shadow: none !important;              /* 移除任何可能的陰影 */
+            border: none !important;                  /* 確保沒有邊框 */
         }
 
         /* 修改 Radio 圓圈的外框顏色 (未選中時) */
@@ -151,7 +153,7 @@ else:
             border-color: #4F4F4F !important; 
         }
 
-        /* 修改選中時內部的「點點」顏色為深灰色 */
+        /* 修改選中時內部的「點點」顏色 */
         div[data-testid="stRadio"] input:checked + div {
             background-color: #4F4F4F !important; 
             border-color: #4F4F4F !important;      
@@ -182,14 +184,17 @@ st.title("📈 股價五線譜")
 # 預先處理搜尋代號邏輯：補全台股後綴
 search_id = f"{stock_id}.TW" if stock_id.isdigit() else stock_id
 
-# 顯示股票代碼
-if calculate_btn:
-    st.write(f"### {search_id}")
+# # 顯示股票代碼
+# if calculate_btn:
+#     st.write(f"### {search_id}")
 
 # 判斷邏輯：如果按鈕「還沒被按下」 ---
 if not calculate_btn:
     st.info("💡 請點開左上角選單 [ > ] 在左側面板設定參數後按「開始計算」即可產出圖表")
 else:
+    # 顯示股票代碼
+    st.write(f"### {search_id}") 
+
     # --- A. 數據下載與清理 ---
     # 使用 auto_adjust=True 取得還原股價，反映真實報酬率
     data = yf.download(search_id, start=start_date, end=end_date, auto_adjust=True)
