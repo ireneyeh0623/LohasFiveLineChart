@@ -140,15 +140,12 @@ else:
             4. 圖表主題 (Radio) 圓圈與文字調整
            ========================================== */        
 
-        /* A. [強化版] 徹底移除選項文字後方的背景高亮、紅塊與陰影 */
+        /* A. 徹底移除選項文字後方的背景高亮與紅色陰影 */
         div[data-testid="stRadio"] [data-baseweb="radio"],
-        div[data-testid="stRadio"] [data-baseweb="radio"] *, /* 關鍵：鎖定所有子層級 */
         div[data-testid="stRadio"] label {
             background-color: transparent !important;
-            background: transparent !important;
             box-shadow: none !important;
             border: none !important;
-            outline: none !important; /* 消除點選時的黑色或紅色外框 */
         }
 
         /* B. 修改選項文字顏色為深灰色 */
