@@ -159,15 +159,21 @@ else:
 
         /* 修改 Radio 圓圈的外框顏色 (未選中時) */
         div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child {
-            border-color: #4F4F4F !important; 
+            border-color: #FF4B4B !important; 
         }
 
-        /* 修改選中時內部的「實心圓點」顏色為深灰色 */
+        /* 修改選中時內部的「實心圓點」顏色*/
         /* 針對內層 div 進行填色控制 */
         div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child > div {
-            background-color: #4F4F4F !important;
+            background-color: #FFFFFF !important;
         }
 
+        /* 修改選中時的圓圈背景顏色為紅色 (#FF4B4B)*/
+        div[data-testid="stRadio"] input:checked + div {
+            background-color: #FF4B4B !important; 
+            border-color: #FF4B4B !important;      
+        }
+        
         /* 額外覆蓋：確保選取狀態的背景色不再出現 */
         div[data-testid="stRadio"] input:checked + div {
             background-color: transparent !important; /* 讓點點周圍保持透明 */
@@ -192,6 +198,10 @@ st.title("📈 股價五線譜")
 
 # 預先處理搜尋代號邏輯：補全台股後綴
 search_id = f"{stock_id}.TW" if stock_id.isdigit() else stock_id
+
+# 只有在按下計算按鈕且資料不為空時才顯示股票代碼
+if calculate_btn and not data.empty:
+    st.write(f"### {search_id}")
 
 
 # --- 3. 判斷邏輯：如果按鈕「還沒被按下」 ---
