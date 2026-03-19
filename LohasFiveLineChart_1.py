@@ -56,6 +56,19 @@ if theme_choice == "深色(深色背景)":
             - color: white 使輸入的文字變為白色
             - background-color: #262730 設定一個比主背景稍淺的深灰色，增加層次感 */
         input { color: white !important; background-color: #262730 !important; }
+                
+        /* --- [新增] 深色模式下的按鈕顏色 --- */
+        div.stButton > button {
+            background-color: #31333F !important; /* 改為深灰色 */
+            border: 1px solid #4A4A4A !important;
+            color: white !important;
+        }
+
+        /* --- [新增] 深色模式下的選項文字顏色 --- */
+        div[data-testid="stRadio"] label p {
+            color: #A0A0A0 !important; /* 讓選項文字呈現淺灰色，與背景區分 */
+        }     
+
         </style>
         """, unsafe_allow_html=True)
 else:
@@ -99,7 +112,7 @@ else:
         }
                 
         /* ==========================================
-            3. 「開始計算」按鈕自定義視覺 (純黑簡約風)
+            3. 「開始計算」按鈕自定義視覺 (改為深灰色)
            ========================================== */
 
         /* 設定按鈕主體為純黑色背景、取消圓角邊框感，並將文字設為粗體 */
@@ -116,8 +129,12 @@ else:
         
         /* 定義滑鼠懸停 (Hover) 效果：將背景色由純黑調淺為深灰色 (#333333)，提供使用者操作回饋 */
         div.stButton > button:hover {
-            background-color: #333333 !important;
+            background-color: #4F4F4F !important;
         }
+        
+        /* --- [新增] 亮色模式下的選項文字顏色 --- */
+        div[data-testid="stRadio"] label p {
+            color: #31333F !important; /* 將選項文字從純黑改為深灰色 */
 
         /* ==========================================
              4. 介面層次調整 (側邊欄邊框與文字強化)
