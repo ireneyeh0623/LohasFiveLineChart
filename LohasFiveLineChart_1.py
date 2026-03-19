@@ -95,6 +95,13 @@ else:
             2. 輸入框 (Input) 與 日期選取器 樣式優化
            ========================================== */     
 
+        /* 強制將所有輸入框 (含日期、文字) 的內部文字設為黑色 */
+        input { 
+            color: #000000 !important; 
+            -webkit-text-fill-color: #000000 !important; /* 強制覆蓋瀏覽器預設填滿色 */
+            background-color: white !important; 
+        }
+                
         /* 針對 Streamlit 內部的 BaseWeb 輸入框組件進行視覺重構 */
         div[data-baseweb="input"], 
         div[data-baseweb="input"] > div,
@@ -112,13 +119,13 @@ else:
         }
                 
         /* ==========================================
-            3. 「開始計算」按鈕自定義視覺 (改為深灰色)
+            3. 「開始計算」按鈕自定義視覺
            ========================================== */
 
-        /* 設定按鈕主體為純黑色背景、取消圓角邊框感，並將文字設為粗體 */
+        /* 設定按鈕主體為深灰色背景、取消圓角邊框感，並將文字設為粗體 */
         div.stButton > button {
-            background-color: #31333F !important;
-            border: 1px solid #31333F !important;
+            background-color: #4F4F4F !important;
+            border: 1px solid #4F4F4F !important;
             font-weight: bold !important;
         }
         
@@ -127,9 +134,10 @@ else:
             color: #FFFFFF !important;
         }
         
-        /* 定義滑鼠懸停 (Hover) 效果：將背景色由純黑調淺為深灰色 (#333333)，提供使用者操作回饋 */
+        /* 定義滑鼠懸停 (Hover) 效果，提供使用者操作回饋 */
         div.stButton > button:hover {
-            background-color: #4F4F4F !important;
+            background-color: #666666 !important;
+            border-color: #666666 !important;
         }
         
         /* --- [新增] 亮色模式下的選項文字顏色 --- */
@@ -146,7 +154,7 @@ else:
         /* 確保所有 Input 文字內容在白色背景下依然維持黑色顯示，避免因主題切換產生的文字「消失」現象 */
         input { 
             color: black !important; 
-            background-color: white !important; 
+            background-color: #31333F !important; 
         }
         </style>
         """, unsafe_allow_html=True)
