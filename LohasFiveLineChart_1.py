@@ -199,9 +199,8 @@ st.title("📈 股價五線譜")
 # 預先處理搜尋代號邏輯：補全台股後綴
 search_id = f"{stock_id}.TW" if stock_id.isdigit() else stock_id
 
-# 只有在按下計算按鈕且資料不為空時才顯示股票代碼
-if calculate_btn and not data.empty:
-    st.write(f"### {search_id}")
+# 顯示股票代碼
+st.write(f"### {search_id}")
 
 
 # --- 3. 判斷邏輯：如果按鈕「還沒被按下」 ---
