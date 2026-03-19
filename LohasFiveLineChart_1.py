@@ -140,42 +140,43 @@ else:
             4. 圖表主題 (Radio) 圓圈與文字調整
            ========================================== */        
 
-        /* [關鍵 1] 徹底消滅「黑框」與「文字旁紅塊」 */
-        /* 使用 :focus-within 和通配符，強制把所有「非圓圈」的背景和邊框關掉 */
-        div[data-testid="stRadio"] div[data-baseweb="radio"],
-        div[data-testid="stRadio"] div[role="radiogroup"] div,
-        div[data-testid="stRadio"] label,
-        div[data-testid="stRadio"] label * {
+         /* 消除選項後方的灰色高亮方塊：針對 baseweb 底層容器設定 */
+        div[data-testid="stRadio"] [data-baseweb="radio"] {
             background-color: transparent !important;
-            background: transparent !important;
-            border: none !important;
-            outline: none !important;
             box-shadow: none !important;
-            -webkit-box-shadow: none !important;
         }
 
-        /* [關鍵 2] 救回被關掉的「圓圈外框」 */
-        /* 只有這個特定的層級需要邊框，其他層級維持透明 */
-        div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child {
-            border: 1px solid #4F4F4F !important;
+        /* 移除標籤本身的背景設定 */
+        div[data-testid="stRadio"] label {
             background-color: transparent !important;
+            border: none !important;
         }
 
-        /* [關鍵 3] 選中時：將「圓圈」變紅，且「中心點」變白 */
-        /* A. 圓圈背景變紅 */
-        div[data-testid="stRadio"] input:checked + div {
-            background-color: #FF4B4B !important; 
-            border-color: #FF4B4B !important;      
+        /* 修改選項文字顏色 */
+        div[data-testid="stRadio"] label p {
+            color: #31333F !important;
         }
-        
-        /* B. 中心點變白：使用最廣泛的後代選擇器，確保抓到最深層的 div */
-        div[data-testid="stRadio"] input:checked + div div {
+
+        /* 修改 Radio 圓圈的外框顏色 (未選中時) */
+        div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child {
+            border-color: #4F4F4F !important;
+        }
+
+        /* 修改未選中時內部的點點顏色 */
+        div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child > div {
+            background-color: #4F4F4F !important;
+        }
+
+        /* 修改選中時內部的「實心圓點」顏色*/
+        /* 針對內層 div 進行填色控制 */
+        div[data-testid="stRadio"] div[role="radiogroup"] label div:first-child > div {
             background-color: #FFFFFF !important;
         }
 
-        /* [關鍵 4] 修改選項文字顏色 */
-        div[data-testid="stRadio"] label p {
-            color: #31333F !important; 
+        /* 修改選中時的圓圈背景顏色為紅色 (#FF4B4B)*/
+        div[data-testid="stRadio"] input:checked + div {
+            background-color: #FF4B4B !important;
+            border-color: #FF4B4B !important;      
         }
 
         /* ==========================================
