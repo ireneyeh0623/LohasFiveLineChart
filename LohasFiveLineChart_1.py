@@ -119,17 +119,25 @@ else:
     data = yf.download(search_id, start=start_date, end=end_date, auto_adjust=True)
     
     if not data.empty:
-        # 重設索引（reset_index）_將yfinance 下載後的原始資料，日期轉為可以被讀取的一般欄位後，建立數字序列（回歸必備），防止計算錯誤
-        df = data.copy().reset_index()
-        # 處理 yfinance 可能產生的多層欄位索引 (MultiIndex)
-        if isinstance(df.columns, pd.MultiIndex):
-            df.columns = df.columns.get_level_values(0)
-            
+        # 相容新版 yfinance MultiIndex 欄位結構：直接萃取 Close 欄位，避免 reset_index 後欄名不穩定
+        close_series = data['Close']
+        # 若為 DataFrame（新版 yfinance 多層索引會回傳 DataFrame），取第一欄
+        if isinstance(close_series, pd.DataFrame):
+            close_series = close_series.iloc[:, 0]
+
+        # 建立乾淨的工作用 DataFrame，明確指定欄位名稱
+        df = pd.DataFrame({
+            'Date': close_series.index,
+            'Close_1D': close_series.values.flatten()
+        }).reset_index(drop=True)
+
+        # 移除時區資訊（yfinance 新版可能回傳 tz-aware 日期，Plotly 繪圖需純日期）
+        df['Date'] = pd.to_datetime(df['Date']).dt.tz_localize(None)
+
         # 排除無交易資料的日期 (NaN)，確保計算精確度
-        df = df.dropna(subset=['Close']) 
-        df['Close_1D'] = df['Close'].values.flatten()
+        df = df.dropna(subset=['Close_1D'])
         # 建立時間索引 (0, 1, 2...) 作為線性回歸的自變數 X
-        df['Time_Idx'] = np.arange(len(df)) 
+        df['Time_Idx'] = np.arange(len(df))
         
         # --- B. 核心原理：線性回歸與標準差軌道計算 ---
         if len(df) > 1:
