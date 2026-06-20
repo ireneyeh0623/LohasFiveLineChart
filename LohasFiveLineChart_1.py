@@ -17,7 +17,7 @@ st.set_page_config(page_title="股價五線譜", layout="wide")
 
 st.sidebar.header("查詢設定")
 # 股票代號輸入：預設為 2330.TW (台積電)
-stock_id = st.sidebar.text_input("股票代號(如2330.TW或AAPL)", "2330.TW")
+stock_id = st.sidebar.text_input("股票代號(如2330或AAPL)", "2330")
 # 日期範圍選擇：設定資料擷取的起始與結束時間
 start_date = st.sidebar.date_input("起始日期(YYYY/MM/DD)", datetime(2022, 10, 3))
 end_date = st.sidebar.date_input("結束日期(YYYY/MM/DD)", datetime.now())
@@ -103,20 +103,28 @@ else:
 
 st.title("📈 股價五線譜")
 
-# 預先處理搜尋代號邏輯：補全台股後綴
-search_id = f"{stock_id}.TW" if stock_id.isdigit() else stock_id
-
 # 判斷邏輯：如果按鈕「還沒被按下」
 if not calculate_btn:
     st.info("💡 請點開左上角選單 [ >> ] 在左側面板設定參數後，按「開始計算」即可產出圖表")
 # 判斷邏輯：按下按鈕後才執行抓取資料的動作：
 else:
-    # 顯示股票代碼
-    st.markdown(f"<h3 style='color: {font_color};'>{search_id}</h3>", unsafe_allow_html=True)
+    # 若使用者已輸入含 . 的代號（如 2330.TW），直接使用；否則依序嘗試原始、.TW、.TWO
+    if '.' in stock_id:
+        candidates = [stock_id]
+    else:
+        candidates = [stock_id, f"{stock_id}.TW", f"{stock_id}.TWO"]
 
-    # --- A. 數據下載與清理 ---
-    # 使用 auto_adjust=True 取得還原股價，反映真實報酬率
-    data = yf.download(search_id, start=start_date, end=end_date, auto_adjust=True)
+    data = pd.DataFrame()
+    search_id = candidates[0]
+    for candidate in candidates:
+        _dl = yf.download(candidate, start=start_date, end=end_date, auto_adjust=True)
+        if not _dl.empty:
+            data = _dl
+            search_id = candidate
+            break
+
+    # 顯示最終使用的股票代碼
+    st.markdown(f"<h3 style='color: {font_color};'>{search_id}</h3>", unsafe_allow_html=True)
     
     if not data.empty:
         # 相容新版 yfinance MultiIndex 欄位結構：直接萃取 Close 欄位，避免 reset_index 後欄名不穩定
@@ -215,4 +223,4 @@ else:
         else:
             st.warning("資料量不足以計算回歸線。")
     else:
-        st.error("找不到資料，請檢查代號是否正確。")
+        st.error(f"找不到股票資料（已嘗試：{', '.join(candidates)}），請檢查代號或日期。")
